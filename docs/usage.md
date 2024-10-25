@@ -30,7 +30,7 @@ The samplesheet can have as many columns as you desire, however, there is a stri
 
 | Column     | Description                                                                                         |
 | ---------- | --------------------------------------------------------------------------------------------------- |
-| `sequence` | Custom sequence name. Spaces in sequence names are automatically converted to underscores (`_`).    |
+| `id`       | Custom sequence name. Spaces in sequence names are automatically converted to underscores (`_`).    |
 | `fasta`    | Full path to fasta file for the provided sequence. File has to have the extension ".fasta" or "fa". |
 
 An [example samplesheet](../assets/samplesheet.csv) has been provided with the pipeline.
