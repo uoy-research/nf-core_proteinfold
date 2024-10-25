@@ -26,6 +26,8 @@ process GENERATE_REPORT {
     def args = task.ext.args ?: ''
 
     """
+
+    
     generate_report.py --type ${output_type} \\
         --msa ${msa} \\
         --pdb ${pdb.join(' ')} \\

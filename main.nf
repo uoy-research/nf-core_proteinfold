@@ -213,11 +213,11 @@ workflow NFCORE_PROTEINFOLD {
             Channel.fromPath("$projectDir/assets/proteinfold_template.html", checkIfExists: true).first()
         )
         ch_versions = ch_versions.mix(GENERATE_REPORT.out.versions)
-
+        //GENERATE_REPORT.out.sequence_coverage.view()
         if (requested_modes.size() > 1){
-            ch_comparision_report_files =
             ch_report_input.filter{it[0]["model"] == "esmfold"}
             .map{[it[0]["id"], it[0], it[1], it[2]]}
+            .set{ch_comparision_report_files}
 
             if (requested_modes.contains("alphafold2")) {
                 ch_comparision_report_files = ch_comparision_report_files.mix(
@@ -249,10 +249,11 @@ workflow NFCORE_PROTEINFOLD {
                 .set{ch_comparision_report_input}
 
             COMPARE_STRUCTURES(
-                ch_comparision_report_input.map{it[1][0]["model"] = params.mode.toLowerCase(); [it[1][0], it[2]]},
-                ch_comparision_report_input.map{it[1][0]["model"] = params.mode.toLowerCase(); [it[1][0], it[3]]},
+                ch_comparision_report_input.map{it[1][0]["models"] = params.mode.toLowerCase(); [it[1][0], it[2]]},
+                ch_comparision_report_input.map{it[1][0]["models"] = params.mode.toLowerCase(); [it[1][0], it[3]]},
                 Channel.fromPath("$projectDir/assets/comparison_template.html", checkIfExists: true).first()
             )
+            ch_versions = ch_versions.mix(COMPARE_STRUCTURES.out.versions)
         }
     }
 
