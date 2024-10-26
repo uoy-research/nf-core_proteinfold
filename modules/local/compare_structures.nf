@@ -29,7 +29,7 @@ process COMPARE_STRUCTURES {
         --html_template ${template} \\
         --output_dir ./ \\
         --name ${meta.id} \\
-        $args \\
+        $args
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
