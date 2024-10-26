@@ -210,20 +210,41 @@ def generate_plots(msa_path, plddt_paths, name, out_dir):
         i += 1
 
 
+
 def align_structures(structures):
     parser = PDB.PDBParser(QUIET=True)
     structures = [
         parser.get_structure(f"Structure_{i}", pdb) for i, pdb in enumerate(structures)
     ]
-
     ref_structure = structures[0]
-    ref_atoms = [atom for atom in ref_structure.get_atoms()]
 
+    common_atoms = set(
+        f"{atom.get_parent().get_id()[1]}-{atom.name}"
+        for atom in ref_structure.get_atoms()
+    )
+    for i, structure in enumerate(structures[1:], start=1):
+        common_atoms = common_atoms.intersection(
+            set(
+                f"{atom.get_parent().get_id()[1]}-{atom.name}"
+                for atom in structure.get_atoms()
+            )
+        )
+
+    ref_atoms = [
+        atom
+        for atom in ref_structure.get_atoms()
+        if f"{atom.get_parent().get_id()[1]}-{atom.name}" in common_atoms
+    ]
+    # print(ref_atoms)
     super_imposer = PDB.Superimposer()
     aligned_structures = [structures[0]]  # Include the reference structure in the list
 
     for i, structure in enumerate(structures[1:], start=1):
-        target_atoms = [atom for atom in structure.get_atoms()]
+        target_atoms = [
+            atom
+            for atom in structure.get_atoms()
+            if f"{atom.get_parent().get_id()[1]}-{atom.name}" in common_atoms
+        ]
 
         super_imposer.set_atoms(ref_atoms, target_atoms)
         super_imposer.apply(structure.get_atoms())
