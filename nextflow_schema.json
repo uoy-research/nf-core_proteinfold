@@ -4,7 +4,7 @@
     "title": "nf-core/proteinfold pipeline parameters",
     "description": "Protein 3D structure prediction pipeline",
     "type": "object",
-    "definitions": {
+    "$defs": {
         "input_output_options": {
             "title": "Global options",
             "type": "object",
@@ -623,46 +623,46 @@
     },
     "allOf": [
         {
-            "$ref": "#/definitions/input_output_options"
+            "$ref": "#/$defs/input_output_options"
         },
         {
-            "$ref": "#/definitions/alphafold2_options"
+            "$ref": "#/$defs/alphafold2_options"
         },
         {
-            "$ref": "#/definitions/colabfold_options"
+            "$ref": "#/$defs/colabfold_options"
         },
         {
-            "$ref": "#/definitions/esmfold_options"
+            "$ref": "#/$defs/esmfold_options"
         },
         {
-            "$ref": "#/definitions/foldseek_options"
+            "$ref": "#/$defs/foldseek_options"
         },
         {
-            "$ref": "#/definitions/process_skipping_options"
+            "$ref": "#/$defs/process_skipping_options"
         },
         {
-            "$ref": "#/definitions/institutional_config_options"
+            "$ref": "#/$defs/institutional_config_options"
         },
         {
-            "$ref": "#/definitions/alphafold2_dbs_and_parameters_link_options"
+            "$ref": "#/$defs/alphafold2_dbs_and_parameters_link_options"
         },
         {
-            "$ref": "#/definitions/alphafold2_dbs_and_parameters_path_options"
+            "$ref": "#/$defs/alphafold2_dbs_and_parameters_path_options"
         },
         {
-            "$ref": "#/definitions/colabfold_dbs_and_parameters_link_options"
+            "$ref": "#/$defs/colabfold_dbs_and_parameters_link_options"
         },
         {
-            "$ref": "#/definitions/colabfold_dbs_and_parameters_path_options"
+            "$ref": "#/$defs/colabfold_dbs_and_parameters_path_options"
         },
         {
-            "$ref": "#/definitions/esmfold_parameters_link_options"
+            "$ref": "#/$defs/esmfold_parameters_link_options"
         },
         {
-            "$ref": "#/definitions/esmfold_parameters_path_options"
+            "$ref": "#/$defs/esmfold_parameters_path_options"
         },
         {
-            "$ref": "#/definitions/generic_options"
+            "$ref": "#/$defs/generic_options"
         }
     ]
 }
