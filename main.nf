@@ -34,6 +34,7 @@ include { getColabfoldAlphafold2Params     } from './subworkflows/local/utils_nf
 include { getColabfoldAlphafold2ParamsPath } from './subworkflows/local/utils_nfcore_proteinfold_pipeline'
 
 include { GENERATE_REPORT     } from './modules/local/generate_report'
+include { COMPARE_STRUCTURES   } from './modules/local/compare_structures'
 include { FOLDSEEK_EASYSEARCH } from './modules/nf-core/foldseek/easysearch/main'
 
 /*
@@ -64,11 +65,11 @@ workflow NFCORE_PROTEINFOLD {
     ch_multiqc      = Channel.empty()
     ch_versions     = Channel.empty()
     ch_report_input = Channel.empty()
-
+    requested_modes = params.mode.toLowerCase().split(",")
     //
     // WORKFLOW: Run alphafold2
     //
-    if(params.mode.toLowerCase().split(",").contains("alphafold2")) {
+    if(requested_modes.contains("alphafold2")) {
         //
         // SUBWORKFLOW: Prepare Alphafold2 DBs
         //
@@ -130,7 +131,7 @@ workflow NFCORE_PROTEINFOLD {
     //
     // WORKFLOW: Run colabfold
     //
-    if(params.mode.toLowerCase().split(",").contains("colabfold")) {
+    if(requested_modes.contains("colabfold")) {
         //
         // SUBWORKFLOW: Prepare Colabfold DBs
         //
@@ -173,7 +174,7 @@ workflow NFCORE_PROTEINFOLD {
     //
     // WORKFLOW: Run esmfold
     //
-    if(params.mode.toLowerCase().split(",").contains("esmfold")) {
+    if(requested_modes.contains("esmfold")) {
         //
         // SUBWORKFLOW: Prepare esmfold DBs
         //
@@ -209,9 +210,51 @@ workflow NFCORE_PROTEINFOLD {
             ch_report_input.map{[it[0], it[1]]},
             ch_report_input.map{[it[0], it[2]]},
             ch_report_input.map{it[0].model},
-            Channel.fromPath("$projectDir/assets/proteinfold_template.html").first()
+            Channel.fromPath("$projectDir/assets/proteinfold_template.html", checkIfExists: true).first()
         )
         ch_versions = ch_versions.mix(GENERATE_REPORT.out.versions)
+        //GENERATE_REPORT.out.sequence_coverage.view()
+        if (requested_modes.size() > 1){
+            ch_report_input.filter{it[0]["model"] == "esmfold"}
+            .map{[it[0]["id"], it[0], it[1], it[2]]}
+            .set{ch_comparision_report_files}
+
+            if (requested_modes.contains("alphafold2")) {
+                ch_comparision_report_files = ch_comparision_report_files.mix(
+                    ALPHAFOLD2
+                    .out
+                    .main_pdb
+                    .map{[it[0]["id"], it[0], it[1]]}
+                    .join(GENERATE_REPORT.out.sequence_coverage
+                            .filter{it[0]["model"] == "alphafold2"}
+                            .map{[it[0]["id"], it[1]]}, remainder:true
+                    )
+                )
+            }
+            if (requested_modes.contains("colabfold")) {
+                ch_comparision_report_files = ch_comparision_report_files.mix(
+                    COLABFOLD
+                    .out
+                    .main_pdb
+                    .map{[it[0]["id"], it[0], it[1]]}
+                    .join(COLABFOLD.out.msa
+                            .map{[it[0]["id"], it[1]]},
+                        remainder:true
+                    )
+                )
+            }
+
+            ch_comparision_report_files
+                .groupTuple(by: [0], size: requested_modes.size())
+                .set{ch_comparision_report_input}
+
+            COMPARE_STRUCTURES(
+                ch_comparision_report_input.map{it[1][0]["models"] = params.mode.toLowerCase(); [it[1][0], it[2]]},
+                ch_comparision_report_input.map{it[1][0]["models"] = params.mode.toLowerCase(); [it[1][0], it[3]]},
+                Channel.fromPath("$projectDir/assets/comparison_template.html", checkIfExists: true).first()
+            )
+            ch_versions = ch_versions.mix(COMPARE_STRUCTURES.out.versions)
+        }
     }
 
     if (params.foldseek_search == "easysearch"){

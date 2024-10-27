@@ -29,6 +29,7 @@ process RUN_ALPHAFOLD2 {
 
     output:
     path ("${fasta.baseName}*")
+    tuple val(meta), path ("${meta.id}_alphafold2.pdb"), emit: main_pdb
     tuple val(meta), path ("${fasta.baseName}/ranked*pdb"), emit: pdb
     tuple val(meta), path ("${fasta.baseName}/*_msa.tsv") , emit: msa
     tuple val(meta), path ("*_mqc.tsv")                   , emit: multiqc
@@ -65,7 +66,7 @@ process RUN_ALPHAFOLD2 {
         --random_seed=53343 \
         $args
 
-    cp "${fasta.baseName}"/ranked_0.pdb ./"${fasta.baseName}".alphafold.pdb
+    cp "${fasta.baseName}"/ranked_0.pdb ./"${meta.id}"_alphafold2.pdb
     cd "${fasta.baseName}"
     awk '{print \$6"\\t"\$11}' ranked_0.pdb | uniq > ranked_0_plddt.tsv
     for i in 1 2 3 4
@@ -73,9 +74,9 @@ process RUN_ALPHAFOLD2 {
     done
     paste ranked_0_plddt.tsv ranked_1_plddt.tsv ranked_2_plddt.tsv ranked_3_plddt.tsv ranked_4_plddt.tsv > plddt.tsv
     echo -e Positions"\\t"rank_0"\\t"rank_1"\\t"rank_2"\\t"rank_3"\\t"rank_4 > header.tsv
-    cat header.tsv plddt.tsv > ../"${fasta.baseName}"_plddt_mqc.tsv
+    cat header.tsv plddt.tsv > ../"${meta.id}"_plddt_mqc.tsv
 
-    extract_output.py --name ${fasta.baseName} \\
+    extract_output.py --name ${meta.id} \\
         --pkls features.pkl
     cd ..
 
@@ -87,8 +88,8 @@ process RUN_ALPHAFOLD2 {
 
     stub:
     """
-    touch ./"${fasta.baseName}".alphafold.pdb
-    touch ./"${fasta.baseName}"_mqc.tsv
+    touch ./"${meta.id}"_alphafold2.pdb
+    touch ./"${meta.id}"_mqc.tsv
     mkdir "${fasta.baseName}"
     touch "${fasta.baseName}/ranked_0.pdb"
     touch "${fasta.baseName}/ranked_1.pdb"

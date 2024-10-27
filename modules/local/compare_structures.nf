@@ -1,5 +1,5 @@
-process GENERATE_REPORT {
-    tag   "$meta.id-$meta.model"
+process COMPARE_STRUCTURES {
+    tag   "$meta.id"
     label 'process_single'
 
     conda "bioconda::multiqc:1.21"
@@ -10,13 +10,10 @@ process GENERATE_REPORT {
     input:
     tuple val(meta), path(pdb)
     tuple val(meta_msa), path(msa)
-    val(output_type)
     path(template)
 
     output:
     tuple val(meta), path ("*report.html"), emit: report
-    tuple val(meta), path ("*seq_coverage.png"), optional: true, emit: sequence_coverage
-    tuple val(meta), path ("*_LDDT.html"), emit: plddt
     path "versions.yml"        , emit: versions
 
     when:
@@ -26,32 +23,29 @@ process GENERATE_REPORT {
     def args = task.ext.args ?: ''
 
     """
-    generate_report.py \\
-        --type ${output_type} \\
-        --msa ${msa} \\
+    generate_comparison_report.py \\
+        --msa ${msa.join(' ')} \\
         --pdb ${pdb.join(' ')} \\
         --html_template ${template} \\
         --output_dir ./ \\
         --name ${meta.id} \\
-        $args \\
+        $args
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
         python: \$(python3 --version | sed 's/Python //g')
-        generate_report.py: \$(python3 --version)
+        generate_comparison_report.py: \$(python3 --version)
     END_VERSIONS
     """
 
     stub:
     """
     touch test_alphafold2_report.html
-    touch test_seq_coverage.png
-    touch test_LDDT.html
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
         python: \$(python3 --version | sed 's/Python //g')
-        generate_report.py: \$(python3 --version)
+        generate_comparison_report.py: \$(python3 --version)
     END_VERSIONS
     """
 }

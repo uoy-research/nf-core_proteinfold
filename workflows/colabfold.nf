@@ -160,6 +160,7 @@ workflow COLABFOLD {
 
     emit:
     pdb = COLABFOLD_BATCH.out.pdb // channel: /path/to/*.pdb
+    main_pdb = COLABFOLD_BATCH.out.main_pdb // channel: /path/to/*.pdb
     msa = COLABFOLD_BATCH.out.msa // channel: /path/to/*_coverage.png
     multiqc_report = ch_multiqc_report // channel: /path/to/multiqc_report.html
     versions       = ch_versions       // channel: [ path(versions.yml) ]
