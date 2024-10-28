@@ -7,7 +7,7 @@
     "items": {
         "type": "object",
         "properties": {
-            "sequence": {
+            "id": {
                 "type": "string",
                 "pattern": "^\\S+$",
                 "errorMessage": "Sequence name must be provided and cannot contain spaces",
@@ -21,6 +21,6 @@
                 "errorMessage": "Fasta file must be provided, cannot contain spaces and must have extension '.fa' or '.fasta'"
             }
         },
-        "required": ["sequence", "fasta"]
+        "required": ["id", "fasta"]
     }
 }

@@ -28,10 +28,10 @@ T1026,https://raw.githubusercontent.com/nf-core/test-datasets/proteinfold/testda
 
 The samplesheet can have as many columns as you desire, however, there is a strict requirement for the first 2 columns to match those defined in the table below:
 
-| Column     | Description                                                                                         |
-| ---------- | --------------------------------------------------------------------------------------------------- |
-| `sequence` | Custom sequence name. Spaces in sequence names are automatically converted to underscores (`_`).    |
-| `fasta`    | Full path to fasta file for the provided sequence. File has to have the extension ".fasta" or "fa". |
+| Column  | Description                                                                                         |
+| ------- | --------------------------------------------------------------------------------------------------- |
+| `id`    | Custom sequence name. Spaces in sequence names are automatically converted to underscores (`_`).    |
+| `fasta` | Full path to fasta file for the provided sequence. File has to have the extension ".fasta" or "fa". |
 
 An [example samplesheet](../assets/samplesheet.csv) has been provided with the pipeline.
 
