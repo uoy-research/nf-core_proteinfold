@@ -9,6 +9,7 @@
 //
 include { COLABFOLD_BATCH        } from '../modules/local/colabfold_batch'
 include { MMSEQS_COLABFOLDSEARCH } from '../modules/local/mmseqs_colabfoldsearch'
+include { JACKHMMER_COLABFOLDSEARCH } from '../modules/local/jackhmmer_colabfoldsearch'
 include { MULTIFASTA_TO_CSV      } from '../modules/local/multifasta_to_csv'
 
 /*
@@ -55,6 +56,7 @@ workflow COLABFOLD {
     //
     Channel
         .fromSamplesheet("input")
+        .view()
         .set { ch_fasta }
 
     if (params.colabfold_server == 'webserver') {
@@ -87,7 +89,7 @@ workflow COLABFOLD {
             ch_versions = ch_versions.mix(COLABFOLD_BATCH.out.versions)
         }
 
-    } else if (params.colabfold_server == 'local') {
+    } else if (params.colabfold_server == 'local_mmseqs') {
         //
         // MODULE: Run mmseqs
         //
@@ -125,7 +127,46 @@ workflow COLABFOLD {
             num_recycle
         )
         ch_versions = ch_versions.mix(COLABFOLD_BATCH.out.versions)
+    } else if (params.colabfold_server == 'local_jackhmmer') {
+        //
+        // MODULE: Run jackhmmer / reformat.pl
+        //
+        if (params.colabfold_model_preset != 'AlphaFold2-ptm') {
+            MULTIFASTA_TO_CSV(
+                ch_fasta
+            )
+            ch_versions = ch_versions.mix(MULTIFASTA_TO_CSV.out.versions)
+            JACKHMMER_COLABFOLDSEARCH (
+                MULTIFASTA_TO_CSV.out.input_csv,
+                ch_colabfold_params,
+                ch_colabfold_db,
+                ch_uniref30
+            )
+            ch_versions = ch_versions.mix(JACKHMMER_COLABFOLDSEARCH.out.versions)
+        } else {
+            JACKHMMER_COLABFOLDSEARCH (
+                ch_fasta,
+                ch_colabfold_params,
+                ch_colabfold_db,
+                ch_uniref30
+            )
+            ch_versions = ch_versions.mix(JACKHMMER_COLABFOLDSEARCH.out.versions)
+        }
+
+        //
+        // MODULE: Run colabfold
+        //
+        COLABFOLD_BATCH(
+            JACKHMMER_COLABFOLDSEARCH.out.a3m,
+            colabfold_model_preset,
+            ch_colabfold_params,
+            ch_colabfold_db,
+            ch_uniref30,
+            num_recycle
+        )
+        ch_versions = ch_versions.mix(COLABFOLD_BATCH.out.versions)
     }
+    
 
     //
     // Collate and save software versions
