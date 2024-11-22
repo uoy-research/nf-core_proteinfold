@@ -45,6 +45,7 @@ workflow COLABFOLD {
     colabfold_model_preset // string: Specifies the model preset to use for colabfold
     ch_colabfold_params    // channel: path(colabfold_params)
     ch_colabfold_db        // channel: path(colabfold_db)
+    ch_custom_db           // channel: path(custom_db) Custom fasta file for jackhmmer search
     ch_uniref30            // channel: path(uniref30)
     num_recycle            // int: Number of recycles for esmfold
 
@@ -139,7 +140,7 @@ workflow COLABFOLD {
             JACKHMMER_COLABFOLDSEARCH (
                 MULTIFASTA_TO_CSV.out.input_csv,
                 ch_colabfold_params,
-                ch_colabfold_db,
+                ch_custom_db,
                 ch_uniref30
             )
             ch_versions = ch_versions.mix(JACKHMMER_COLABFOLDSEARCH.out.versions)
@@ -147,7 +148,7 @@ workflow COLABFOLD {
             JACKHMMER_COLABFOLDSEARCH (
                 ch_fasta,
                 ch_colabfold_params,
-                ch_colabfold_db,
+                ch_custom_db,
                 ch_uniref30
             )
             ch_versions = ch_versions.mix(JACKHMMER_COLABFOLDSEARCH.out.versions)

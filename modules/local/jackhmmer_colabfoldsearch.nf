@@ -22,33 +22,31 @@ process JACKHMMER_COLABFOLDSEARCH {
 
     script:
     def args = task.ext.args ?: ''
-    def VERSION = '1.5.2' // WARN: Version information not provided by tool on CLI. Please update this string when bumping container versions.
+    def VERSION = '0.1.0' // WARN: Version information not provided by tool on CLI. Please update this string when bumping container versions.
 
     """
-    ln -r -s $colabfold_db/colabfold_envdb* ./db
+    mkdir -p results
+    /usr/local/bin/jackhmmer -A results/${meta.id}.hmm.sto -o results/${meta.id}.hmm.out ${fasta} $colabfold_db
+    /hh-suite/scripts/reformat.pl sto a3m results/${meta.id}.hmm.sto results/${meta.id}.hmm.a3m
 
-    /localcolabfold/colabfold-conda/bin/colabfold_search \\
-        $args \\
-        --threads $task.cpus ${fasta} \\
-        ./db \\
-        "result/"
 
-    cp result/0.a3m ${meta.id}.a3m
+
+    cp results/${meta.id}.hmm.a3m ${meta.id}.a3m
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        colabfold_search: $VERSION
+        jackhmmer_colabfold_search: $VERSION
     END_VERSIONS
     """
 
     stub:
-    def VERSION = '1.5.2' // WARN: Version information not provided by tool on CLI. Please update this string when bumping container versions.
+    def VERSION = '0.1.0' // WARN: Version information not provided by tool on CLI. Please update this string when bumping container versions.
     """
     touch ${meta.id}.a3m
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        colabfold_search: $VERSION
+        jackhmmer_colabfold_search: $VERSION
     END_VERSIONS
     """
 }
