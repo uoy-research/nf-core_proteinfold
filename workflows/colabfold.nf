@@ -132,6 +132,7 @@ workflow COLABFOLD {
         //
         // MODULE: Run jackhmmer / reformat.pl
         //
+        log.debug "Inside local_jackhmmer"
         if (params.colabfold_model_preset != 'AlphaFold2-ptm') {
             MULTIFASTA_TO_CSV(
                 ch_fasta
