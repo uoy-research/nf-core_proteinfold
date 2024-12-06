@@ -139,17 +139,13 @@ workflow COLABFOLD {
             ch_versions = ch_versions.mix(MULTIFASTA_TO_CSV.out.versions)
             JACKHMMER_COLABFOLDSEARCH (
                 MULTIFASTA_TO_CSV.out.input_csv,
-                ch_colabfold_params,
-                ch_custom_db,
-                ch_uniref30
+                ch_custom_db
             )
             ch_versions = ch_versions.mix(JACKHMMER_COLABFOLDSEARCH.out.versions)
         } else {
             JACKHMMER_COLABFOLDSEARCH (
                 ch_fasta,
-                ch_colabfold_params,
-                ch_custom_db,
-                ch_uniref30
+                ch_custom_db
             )
             ch_versions = ch_versions.mix(JACKHMMER_COLABFOLDSEARCH.out.versions)
         }
