@@ -117,7 +117,7 @@
                     "type": "string",
                     "default": "webserver",
                     "description": "Specifies the MSA server used by Colabfold",
-                    "enum": ["webserver", "local_mmseqs", "local_jackhhmer"],
+                    "enum": ["webserver", "local_mmseqs", "local_jackhmmer"],
                     "fa_icon": "fas fa-server"
                 },
                 "colabfold_model_preset": {
