@@ -163,7 +163,7 @@ workflow COLABFOLD {
             ch_colabfold_params,
             ch_colabfold_db,
             ch_uniref30,
-            num_recycle
+            num_recycles
         )
         ch_versions = ch_versions.mix(COLABFOLD_BATCH.out.versions)
     }
