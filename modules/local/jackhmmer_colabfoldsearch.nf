@@ -26,7 +26,7 @@ process JACKHMMER_COLABFOLDSEARCH {
 
     """
     mkdir -p results
-    /usr/local/bin/jackhmmer -A results/${meta.id}.hmm.sto -o results/${meta.id}.hmm.out ${fasta} $colabfold_db
+    jackhmmer -A results/${meta.id}.hmm.sto -o results/${meta.id}.hmm.out ${fasta} $colabfold_db
     /hh-suite/scripts/reformat.pl sto a3m results/${meta.id}.hmm.sto results/${meta.id}.hmm.a3m
 
 
