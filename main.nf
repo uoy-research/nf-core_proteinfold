@@ -101,8 +101,8 @@ workflow NFCORE_PROTEINFOLD {
             params.alphafold2_mode,
             params.alphafold2_model_preset,
             PREPARE_ALPHAFOLD2_DBS.out.params,
-            PREPARE_ALPHAFOLD2_DBS.out.bfd.ifEmpty([]),
-            PREPARE_ALPHAFOLD2_DBS.out.small_bfd.ifEmpty([]),
+            PREPARE_ALPHAFOLD2_DBS.out.bfd.ifEmpty([]).first(),
+            PREPARE_ALPHAFOLD2_DBS.out.small_bfd.ifEmpty([]).first(),
             PREPARE_ALPHAFOLD2_DBS.out.mgnify,
             PREPARE_ALPHAFOLD2_DBS.out.pdb70,
             PREPARE_ALPHAFOLD2_DBS.out.pdb_mmcif,
@@ -144,7 +144,7 @@ workflow NFCORE_PROTEINFOLD {
             PREPARE_COLABFOLD_DBS.out.params,
             PREPARE_COLABFOLD_DBS.out.colabfold_db,
             PREPARE_COLABFOLD_DBS.out.uniref30,
-            params.num_recycle
+            params.num_recycles_colabfold
         )
         ch_multiqc  = COLABFOLD.out.multiqc_report
         ch_versions = ch_versions.mix(COLABFOLD.out.versions)
@@ -172,7 +172,7 @@ workflow NFCORE_PROTEINFOLD {
         ESMFOLD (
             ch_versions,
             PREPARE_ESMFOLD_DBS.out.params,
-            params.num_recycle
+            params.num_recycles_esmfold
         )
         ch_multiqc  = ESMFOLD.out.multiqc_report
         ch_versions = ch_versions.mix(ESMFOLD.out.versions)

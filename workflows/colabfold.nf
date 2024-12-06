@@ -47,7 +47,7 @@ workflow COLABFOLD {
     ch_colabfold_db        // channel: path(colabfold_db)
     ch_custom_db           // channel: path(custom_db) Custom fasta file for jackhmmer search
     ch_uniref30            // channel: path(uniref30)
-    num_recycle            // int: Number of recycles for esmfold
+    num_recycles           // int: Number of recycles for esmfold
 
     main:
     ch_multiqc_files = Channel.empty()
@@ -75,7 +75,7 @@ workflow COLABFOLD {
                 ch_colabfold_params,
                 [],
                 [],
-                num_recycle
+                num_recycles
             )
             ch_versions = ch_versions.mix(COLABFOLD_BATCH.out.versions)
         } else {
@@ -85,7 +85,7 @@ workflow COLABFOLD {
                 ch_colabfold_params,
                 [],
                 [],
-                num_recycle
+                num_recycles
             )
             ch_versions = ch_versions.mix(COLABFOLD_BATCH.out.versions)
         }
@@ -125,7 +125,7 @@ workflow COLABFOLD {
             ch_colabfold_params,
             ch_colabfold_db,
             ch_uniref30,
-            num_recycle
+            num_recycles
         )
         ch_versions = ch_versions.mix(COLABFOLD_BATCH.out.versions)
     } else if (params.colabfold_server == 'local_jackhmmer') {
