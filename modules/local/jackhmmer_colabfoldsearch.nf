@@ -25,13 +25,6 @@ process JACKHMMER_COLABFOLDSEARCH {
     def VERSION = '0.1.0' // WARN: Version information not provided by tool on CLI. Please update this string when bumping container versions.
 
     """
-    echo "Searching for reformat.pl in the container..." > hh_debug.log
-    find / -name "reformat.pl" >> hh_debug.log 2>/dev/null
-    echo "Checking hh-suite directory structure..." >> hh_debug.log
-    find /hh-suite >> hh_debug.log 2>/dev/null
-    echo "Done." >> hh_debug.log
-    cat hh_debug.log
-
     mkdir -p results
     jackhmmer -A results/${meta.id}.hmm.sto -o results/${meta.id}.hmm.out ${fasta} $colabfold_db
     reformat.pl sto a3m results/${meta.id}.hmm.sto results/${meta.id}.hmm.a3m
