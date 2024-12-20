@@ -43,8 +43,6 @@ RUN cd / && git clone https://github.com/soedinglab/hh-suite \
     && make -j 4 \
     && make install
 
-RUN ls -al /hh-suite/scripts
-
 RUN cd / \
     && wget https://raw.githubusercontent.com/YoshitakaMo/localcolabfold/82a3635/install_colabbatch_linux.sh \
     && sed -i "/colabfold.download/d" install_colabbatch_linux.sh \
