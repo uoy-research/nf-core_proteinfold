@@ -36,7 +36,12 @@ RUN wget http://eddylab.org/software/hmmer/hmmer.tar.gz \
     && cd .. \
     && rm -rf hmmer/
 
-RUN cd / && git clone https://github.com/soedinglab/hh-suite
+RUN cd / && git clone https://github.com/soedinglab/hh-suite \
+    && mkdir -p hh-suite/build \
+    && cd hh-suite/build \
+    && cmake -DCMAKE_INSTALL_PREFIX=. .. \
+    && make -j 4 \
+    && make install
 
 RUN cd / \
     && wget https://raw.githubusercontent.com/YoshitakaMo/localcolabfold/82a3635/install_colabbatch_linux.sh \
