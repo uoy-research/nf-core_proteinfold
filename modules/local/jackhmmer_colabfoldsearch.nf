@@ -29,8 +29,6 @@ process JACKHMMER_COLABFOLDSEARCH {
     jackhmmer -A results/${meta.id}.hmm.sto -o results/${meta.id}.hmm.out ${fasta} $colabfold_db
     reformat.pl sto a3m results/${meta.id}.hmm.sto results/${meta.id}.hmm.a3m
 
-
-
     cp results/${meta.id}.hmm.a3m ${meta.id}.a3m
 
     cat <<-END_VERSIONS > versions.yml
