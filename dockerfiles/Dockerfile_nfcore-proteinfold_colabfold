@@ -26,8 +26,6 @@ RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
     libp11-kit0 \
     && rm -rf /var/lib/apt/lists/*
 
-RUN git clone https://github.com/soedinglab/hh-suite
-
 RUN wget http://eddylab.org/software/hmmer/hmmer.tar.gz \
     && mkdir hmmer \
     && tar -xzvf hmmer.tar.gz -C hmmer --strip-components=1 \
@@ -37,6 +35,8 @@ RUN wget http://eddylab.org/software/hmmer/hmmer.tar.gz \
     && make install \
     && cd .. \
     && rm -rf hmmer/
+
+RUN cd / && git clone https://github.com/soedinglab/hh-suite
 
 RUN cd / \
     && wget https://raw.githubusercontent.com/YoshitakaMo/localcolabfold/82a3635/install_colabbatch_linux.sh \
