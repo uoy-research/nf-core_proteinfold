@@ -25,7 +25,7 @@ process JACKHMMER_COLABFOLDSEARCH {
     def VERSION = '0.1.0' // WARN: Version information not provided by tool on CLI. Please update this string when bumping container versions.
 
     """
-    jackhmmer -A ${meta.id}.hmm.sto -o ${meta.id}.hmm.out ${fasta} $colabfold_db
+    /usr/local/bin/jackhmmer -A ${meta.id}.hmm.sto -o ${meta.id}.hmm.out ${fasta} $colabfold_db
     /localcolabfold/colabfold-conda/scripts/reformat.pl sto a3m ${meta.id}.hmm.sto ${meta.id}.hmm.a3m
 
     cp ${meta.id}.hmm.a3m ${meta.id}.a3m
