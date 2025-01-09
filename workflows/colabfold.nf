@@ -133,8 +133,12 @@ workflow COLABFOLD {
         // MODULE: Run jackhmmer / reformat.pl
         //
         if (params.colabfold_model_preset != 'AlphaFold2-ptm') {
+            MULTIFASTA_TO_CSV(
+                ch_fasta
+            )
+            ch_versions = ch_versions.mix(MULTIFASTA_TO_CSV.out.versions)
             JACKHMMER_COLABFOLDSEARCH (
-                ch_fasta,
+                MULTIFASTA_TO_CSV.out.input_csv,
                 ch_custom_db
             )
             ch_versions = ch_versions.mix(JACKHMMER_COLABFOLDSEARCH.out.versions)
