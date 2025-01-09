@@ -136,13 +136,13 @@ workflow COLABFOLD {
             JACKHMMER_COLABFOLDSEARCH (
                 ch_fasta,
                 ch_custom_db
-            ).view()
+            )
             ch_versions = ch_versions.mix(JACKHMMER_COLABFOLDSEARCH.out.versions)
         } else {
             JACKHMMER_COLABFOLDSEARCH (
                 ch_fasta,
                 ch_custom_db
-            ).view()
+            )
             ch_versions = ch_versions.mix(JACKHMMER_COLABFOLDSEARCH.out.versions)
         }
 
@@ -156,7 +156,7 @@ workflow COLABFOLD {
             ch_colabfold_db,
             ch_uniref30,
             num_recycles
-        ).view()
+        )
         ch_versions = ch_versions.mix(COLABFOLD_BATCH.out.versions)
     }
     
