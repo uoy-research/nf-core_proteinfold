@@ -119,7 +119,7 @@ workflow COLABFOLD {
         //
         // MODULE: Run colabfold
         //
-        COLABFOLD_BATCH(
+        COLABFOLD_BATCH (
             MMSEQS_COLABFOLDSEARCH.out.a3m,
             colabfold_model_preset,
             ch_colabfold_params,
@@ -145,12 +145,12 @@ workflow COLABFOLD {
             )
             ch_versions = ch_versions.mix(JACKHMMER_COLABFOLDSEARCH.out.versions)
         }
-        JACKHMMER_COLABFOLDSEARCH.out.view()
+        JACKHMMER_COLABFOLDSEARCH.out.dump()
 
         //
         // MODULE: Run colabfold
         //
-        COLABFOLD_BATCH(
+        COLABFOLD_BATCH (
             JACKHMMER_COLABFOLDSEARCH.out.a3m,
             colabfold_model_preset,
             ch_colabfold_params,
@@ -159,7 +159,7 @@ workflow COLABFOLD {
             num_recycles
         )
         ch_versions = ch_versions.mix(COLABFOLD_BATCH.out.versions)
-        COLABFOLD_BATCH.out.view()
+        COLABFOLD_BATCH.out.dump()
     }
     
 
