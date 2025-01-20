@@ -145,7 +145,6 @@ workflow COLABFOLD {
             )
             ch_versions = ch_versions.mix(JACKHMMER_COLABFOLDSEARCH.out.versions)
         }
-        JACKHMMER_COLABFOLDSEARCH.out.dump()
 
         //
         // MODULE: Run colabfold
